@@ -92,7 +92,7 @@ static void s2mu005_test_read(struct i2c_client *i2c)
 		sprintf(str+strlen(str), "0x%02x:0x%02x, ", i, data);
 	}
 
-	pr_err("[DEBUG]%s: %s\n", __func__, str);
+	//pr_err("[DEBUG]%s: %s\n", __func__, str);
 }
 static BLOCKING_NOTIFIER_HEAD(s2m_acok_notifier_list);
 
@@ -621,14 +621,14 @@ static int s2mu005_get_charging_status(struct s2mu005_charger_data *charger)
 	case 0x06:	//Done Flag
 	case 0x08:	//Done state
 		if(chg_mode.intval == SEC_BATTERY_CHARGING_1ST) {
-			dev_info(&charger->client->dev, "%s: full check 1st\n", __func__);
+			//dev_info(&charger->client->dev, "%s: full check 1st\n", __func__);
 			if(value.intval < charger->pdata->charging_current_table
 									[charger->cable_type].full_check_current_1st)
 				status = POWER_SUPPLY_STATUS_FULL;
 			else
 				status = POWER_SUPPLY_STATUS_CHARGING;
 		} else { //2nd
-			dev_info(&charger->client->dev, "%s: full check 2nd\n", __func__);
+			//dev_info(&charger->client->dev, "%s: full check 2nd\n", __func__);
 			if(value.intval < charger->pdata->charging_current_table
 									[charger->cable_type].full_check_current_2nd)
 				status = POWER_SUPPLY_STATUS_FULL;

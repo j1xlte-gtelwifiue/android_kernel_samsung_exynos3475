@@ -478,8 +478,8 @@ static int s2mu005_get_temperature(struct s2mu005_fuelgauge_data *fuelgauge)
 	}
 	temperature = ((temperature * 100) >> 8)/10;
 
-	dev_dbg(&fuelgauge->i2c->dev, "%s: temperature (%d)\n",
-		__func__, temperature);
+	//dev_dbg(&fuelgauge->i2c->dev, "%s: temperature (%d)\n",
+	//	__func__, temperature);
 
 	return temperature;
 
@@ -537,7 +537,7 @@ static int s2mu005_get_rawsoc(struct s2mu005_fuelgauge_data *fuelgauge)
 		if (s2mu005_read_reg(fuelgauge->i2c, reg, check_data) < 0)
 			goto err;
 
-		dev_dbg(&fuelgauge->i2c->dev, "[DEBUG]%s: data0 (%d) data1 (%d) \n", __func__, data[0], data[1]);
+		//dev_dbg(&fuelgauge->i2c->dev, "[DEBUG]%s: data0 (%d) data1 (%d) \n", __func__, data[0], data[1]);
 		if ((data[0] == check_data[0]) && (data[1] == check_data[1]))
 			break;
 	}
@@ -565,8 +565,8 @@ static int s2mu005_get_rawsoc(struct s2mu005_fuelgauge_data *fuelgauge)
 	if (fg_reset)
 		fuelgauge->diff_soc = fuelgauge->info.soc - rsoc;
 
-	dev_info(&fuelgauge->i2c->dev, "%s: current_soc (%d), previous soc (%d), diff (%d), FG_mode(%d)\n",
-		 __func__, rsoc, fuelgauge->info.soc, fuelgauge->diff_soc, fuelgauge->mode);
+	//dev_info(&fuelgauge->i2c->dev, "%s: current_soc (%d), previous soc (%d), diff (%d), FG_mode(%d)\n",
+	//	 __func__, rsoc, fuelgauge->info.soc, fuelgauge->diff_soc, fuelgauge->mode);
 
 	fuelgauge->info.soc = rsoc + fuelgauge->diff_soc;
 
@@ -591,7 +591,7 @@ static int s2mu005_get_rawsoc(struct s2mu005_fuelgauge_data *fuelgauge)
 		}
 
 		psy_do_property("battery", get, POWER_SUPPLY_PROP_CAPACITY, value);
-		dev_info(&fuelgauge->i2c->dev, "%s: UI SOC = %d\n", __func__, value.intval);
+		//dev_info(&fuelgauge->i2c->dev, "%s: UI SOC = %d\n", __func__, value.intval);
 		if (value.intval >= 98) {
 			if(fuelgauge->mode == CURRENT_MODE) { /* switch to VOLTAGE_MODE */
 				fuelgauge->mode = HIGH_SOC_VOLTAGE_MODE;
@@ -788,7 +788,7 @@ static int s2mu005_get_current(struct s2mu005_fuelgauge_data *fuelgauge)
 	if (s2mu005_read_reg(fuelgauge->i2c, S2MU005_REG_RCUR_CC, data) < 0)
 		return -EINVAL;
 	compliment = (data[1] << 8) | (data[0]);
-	dev_dbg(&fuelgauge->i2c->dev, "%s: rCUR_CC(0x%4x)\n", __func__, compliment);
+	//dev_dbg(&fuelgauge->i2c->dev, "%s: rCUR_CC(0x%4x)\n", __func__, compliment);
 
 	if (compliment & (0x1 << 15)) { /* Charging */
 		curr = ((~compliment) & 0xFFFF) + 1;
@@ -798,7 +798,7 @@ static int s2mu005_get_current(struct s2mu005_fuelgauge_data *fuelgauge)
 		curr = (curr * (-1000)) >> 12;
 	}
 
-	dev_info(&fuelgauge->i2c->dev, "%s: current (%d)mA\n", __func__, curr);
+	//dev_info(&fuelgauge->i2c->dev, "%s: current (%d)mA\n", __func__, curr);
 
 	return curr;
 }
@@ -869,7 +869,7 @@ static int s2mu005_get_avgcurrent(struct s2mu005_fuelgauge_data *fuelgauge)
 	if (s2mu005_read_reg(fuelgauge->i2c, S2MU005_REG_MONOUT, data) < 0)
 		goto err;
 	compliment = (data[1] << 8) | (data[0]);
-	dev_dbg(&fuelgauge->i2c->dev, "%s: MONOUT(0x%4x)\n", __func__, compliment);
+	//dev_dbg(&fuelgauge->i2c->dev, "%s: MONOUT(0x%4x)\n", __func__, compliment);
 
 	if (compliment & (0x1 << 15)) { /* Charging */
 		curr = ((~compliment) & 0xFFFF) + 1;
@@ -882,9 +882,9 @@ static int s2mu005_get_avgcurrent(struct s2mu005_fuelgauge_data *fuelgauge)
 
 	mutex_unlock(&fuelgauge->fg_lock);
 
-	dev_info(&fuelgauge->i2c->dev, "%s: avg current (%d)mA\n", __func__, curr);
+	//dev_info(&fuelgauge->i2c->dev, "%s: avg current (%d)mA\n", __func__, curr);
 
-	dev_info(&fuelgauge->i2c->dev, "%s: SOC(%d)mA\n", __func__, fuelgauge->info.soc);
+	//dev_info(&fuelgauge->i2c->dev, "%s: SOC(%d)mA\n", __func__, fuelgauge->info.soc);
 	if ((fuelgauge->info.soc < 100) && (curr < 0) &&
 	    fuelgauge->is_charging) {
 		curr = 1;
@@ -906,10 +906,10 @@ static int s2mu005_get_vbat(struct s2mu005_fuelgauge_data *fuelgauge)
 	if (s2mu005_read_reg(fuelgauge->i2c, S2MU005_REG_RVBAT, data) < 0)
 		return -EINVAL;
 
-	dev_dbg(&fuelgauge->i2c->dev, "%s: data0 (%d) data1 (%d) \n", __func__, data[0], data[1]);
+	//dev_dbg(&fuelgauge->i2c->dev, "%s: data0 (%d) data1 (%d) \n", __func__, data[0], data[1]);
 	vbat = ((data[0] + (data[1] << 8)) * 1000) >> 13;
 
-	dev_info(&fuelgauge->i2c->dev, "%s: vbat (%d)\n", __func__, vbat);
+	//dev_info(&fuelgauge->i2c->dev, "%s: vbat (%d)\n", __func__, vbat);
 
 	return vbat;
 }
@@ -932,7 +932,7 @@ static int s2mu005_get_avgvbat(struct s2mu005_fuelgauge_data *fuelgauge)
 			old_vbat = new_vbat / 2 + old_vbat / 2;
 	}
 
-	dev_info(&fuelgauge->i2c->dev, "%s: avgvbat (%d)\n", __func__, old_vbat);
+	//dev_info(&fuelgauge->i2c->dev, "%s: avgvbat (%d)\n", __func__, old_vbat);
 
 	return old_vbat;
 }
@@ -1078,9 +1078,9 @@ static void s2mu005_fg_get_scaled_capacity(
 		0 : ((val->intval - fuelgauge->pdata->capacity_min) * 1000 /
 		(fuelgauge->capacity_max - fuelgauge->pdata->capacity_min));
 
-	dev_info(&fuelgauge->i2c->dev,
-			"%s: scaled capacity (%d.%d)\n",
-			__func__, val->intval/10, val->intval%10);
+	//dev_info(&fuelgauge->i2c->dev,
+	//		"%s: scaled capacity (%d.%d)\n",
+	//		__func__, val->intval/10, val->intval%10);
 }
 
 /* capacity is integer */
